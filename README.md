@@ -1,0 +1,1 @@
+# simplified-firebase-example
