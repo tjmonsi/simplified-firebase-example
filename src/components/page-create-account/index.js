@@ -3,7 +3,7 @@ import { TemplateLite } from '@tjmonsi/element-lite/mixins/template-lite';
 import { render, html } from 'lit-html'
 import { firebase } from '../../firebase';
 
-class PageHome extends TemplateLite(PropertiesLite(HTMLElement)) {
+class PageCreateAccount extends TemplateLite(PropertiesLite(HTMLElement)) {
   static get renderer () { return render; }
   template () {
     return html`
@@ -37,38 +37,37 @@ class PageHome extends TemplateLite(PropertiesLite(HTMLElement)) {
       </style>
       <div class="card">
         <h1>
-          Login
+          Signup
         </h1>
-        <form @submit="${this.login.bind(this)}">
+        <form @submit="${this.signup.bind(this)}">
           <input placeholder="Email" name="email" type="email" required>
           <input placeholder="Password" name="password" type="password" required>
 
-          <button>Login</button>
+          <button>Signup</button>
         </form>
 
-        <a href="/create-account">Create Account</a>
+        <a href="/">Login</a>
       </div>
     `;
   }
 
-  async login (e) {
+  async signup (e) {
     e.preventDefault();
     const { shadowRoot } = this;
     const snack = document.querySelector('.snackbar');
     const email = shadowRoot.querySelector('[name=email]').value;
     const password = shadowRoot.querySelector('[name=password]').value;
     try {
-      const { user } = await firebase.auth().signInWithEmailAndPassword(email, password);
+      const { user } = await firebase.auth().createUserWithEmailAndPassword(email, password);
       if (user) {
-        snack.showText('Signed In');
-        window.localStorage.setItem('user', user);
+        snack.showText('Created account for ' + email);
       }
     } catch (error) {
       console.log(error);
       snack.showText(error.message);
     }
+
   }
 }
 
-
-customElements.define('page-home', PageHome);
+customElements.define('page-create-account', PageCreateAccount);
