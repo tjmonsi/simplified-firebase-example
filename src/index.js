@@ -1,5 +1,4 @@
-import '@littleq/core-lite';
-import firebase from 'firebase';
-import { config } from './firebase.config';
 
-firebase.initializeApp(config);
+import '@littleq/core-lite';
+import './components/snackbar-lite'
+import './components/page-home'
