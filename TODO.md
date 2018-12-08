@@ -1,3 +1,5 @@
 - Add firebase config
 - Install Firebase tools
 - Do Firebase init
+- add my core-lite for SPA
+- add login page
