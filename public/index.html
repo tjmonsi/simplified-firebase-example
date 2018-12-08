@@ -92,7 +92,7 @@
                       console.log('The installing service worker became redundant.');
                   }
                   if (text) {
-                    var snacker = document.querySelector('.snackbar-lite');
+                    var snacker = document.querySelector('.snackbar');
                     if (snacker && snacker.showText) {
                       snacker.showText(text);
                     } else {
@@ -119,7 +119,7 @@
                   // be automatically removed.
 
                   if ('controller' in navigator.serviceWorker) {
-                    var snacker = document.querySelector('.snackbar-lite');
+                    var snacker = document.querySelector('.snackbar');
                     text = 'Reloading Web App to accommodate updates...'
                     if (snacker && snacker.showText) {
                       snacker.showText(text);
@@ -146,8 +146,33 @@
   </head>
   <body>
 
-    Hello World
+    <core-lite>
+      <router-lite>
+        <route-data-lite route="/"></route-data-lite>
+        <route-data-lite route="/todo"></route-data-lite>
+        <route-data-lite route="/create-account"></route-data-lite>
+        <route-data-lite route="no-page"></route-data-lite>
+      </router-lite>
+      <template-loader-lite>
+        <template pattern="/">
+          <page-home></page-home>
+        </template>
+        <template pattern="/todo">
+          <page-todo></page-todo>
+        </template>
+        <template pattern="/create-account">
+          <page-create-account></page-create-account>
+        </template>
+        <template pattern="no-page">
+          <page-not-found></page-not-found>
+        </template>
+      </template-loader-lite>
+    </core-lite>
+
+    <snackbar-lite class="snackbar"></snackbar-lite>
     <script src="/lib/webcomponentsjs/webcomponents-bundle.js"></script>
+
+
 
     <script type="module" src="/index.js"></script>
   </body>

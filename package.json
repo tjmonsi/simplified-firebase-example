@@ -5,11 +5,11 @@
   "main": "start.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./node_modules/.bin/webpack --mode=development -o public/index.js -entry src/index.js",
+    "build": "./node_modules/.bin/webpack --mode=development -o public/index.js -entry src/index.js -w",
     "copy": "node start",
     "start": "node dev.js && npm run copy && npm run build",
     "workbox": "./node_modules/.bin/workbox generateSW",
-    "prod": "npm start && npm run workbox",
+    "prod": "node dev.js && npm run copy && ./node_modules/.bin/webpack --mode=production -o public/index.js -entry src/index.js && npm run workbox",
     "serve": "./node_modules/.bin/http-server public"
   },
   "repository": {
@@ -40,7 +40,8 @@
     "workbox-cli": "^3.6.3"
   },
   "dependencies": {
-    "@tjmonsi/element-lite": "^0.1.11",
+    "@littleq/core-lite": "0.0.5",
+    "@tjmonsi/element-lite": "^0.1.12",
     "@webcomponents/webcomponentsjs": "^2.2.1",
     "firebase": "^5.7.0",
     "lit-html": "^0.14.0"

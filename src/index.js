@@ -1,1 +1,6 @@
-console.log('hello world')
+
+import '@littleq/core-lite';
+import './components/snackbar-lite';
+import './components/page-home';
+import './components/page-create-account';
+import './components/page-todo';
