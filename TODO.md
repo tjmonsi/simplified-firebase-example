@@ -1,8 +1,10 @@
 - Add firebase config
 - Install Firebase tools
-- Do Firebase init
+- Do Firebase init with database and functions
 - add my core-lite for SPA
-- add home page
 - add login page
 - add create account page
 - add todo page
+- add list-todos
+- add todos-toggle
+- add status message
