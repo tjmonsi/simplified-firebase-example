@@ -5,9 +5,9 @@
   "main": "start.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "rollup": "./node_modules/.bin/rollup -c rollup.config.js",
+    "build": "./node_modules/.bin/webpack --mode=development -o public/index.js -entry src/index.js",
     "copy": "node start",
-    "start": "node dev.js && npm run copy && npm run rollup",
+    "start": "node dev.js && npm run copy && npm run build",
     "workbox": "./node_modules/.bin/workbox generateSW",
     "prod": "npm start && npm run workbox",
     "serve": "./node_modules/.bin/http-server public"
@@ -34,8 +34,9 @@
     "eslint-plugin-standard": "^4.0.0",
     "fs-extra": "^7.0.1",
     "http-server": "^0.11.1",
-    "rollup": "^0.67.4",
     "semistandard": "^13.0.1",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2",
     "workbox-cli": "^3.6.3"
   },
   "dependencies": {
