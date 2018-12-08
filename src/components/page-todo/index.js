@@ -17,6 +17,10 @@ class PageTodo extends TemplateLite(ObserversLite(HTMLElement)) {
         type: Object,
         value: {},
         observer: '_getTodos'
+      },
+      main: {
+        type: String,
+        value: ''
       }
     }
   }
@@ -81,7 +85,7 @@ class PageTodo extends TemplateLite(ObserversLite(HTMLElement)) {
 
       <div class="card">
         <h2>
-          Todos...
+          ${this.main ? html`Newly created Status: ${this.main}` : 'Todos...'}
         </h2>
 
         <ul>
@@ -103,6 +107,7 @@ class PageTodo extends TemplateLite(ObserversLite(HTMLElement)) {
   constructor () {
     super();
     this._boundHandleTodos = this._handleTodos.bind(this);
+    this._boundHandleMainStatus = this._handleMainStatus.bind(this);
   }
 
   connectedCallback () {
@@ -114,14 +119,26 @@ class PageTodo extends TemplateLite(ObserversLite(HTMLElement)) {
 
   disconnectedCallback () {
     if (super.disconnectedCallback) super.disconnectedCallback();
-    if (this._ref) {
-      this._ref.off('value', this._boundHandleTodos);
-    }
+    if (this._ref) this._ref.off('value', this._boundHandleTodos);
+    if (this._mainRef) this._mainRef.off('value', this._boundHandleMainStatus);
   }
 
   _getTodos () {
-    this._ref = firebase.database().ref(`todo/data/${this.user.uid}`);
-    this._ref.on('value', this._boundHandleTodos);
+    if (this.user && this.user.uid) {
+      this._ref = firebase.database().ref(`todo/data/${this.user.uid}`);
+      this._ref.on('value', this._boundHandleTodos, this._handleErrors);
+      this._mainRef = firebase.database().ref(`status/data/${this.user.uid}`);
+      this._mainRef.on('value', this._boundHandleMainStatus, this._handleErrors);
+    }
+  }
+
+  _handleErrors (error) {
+    const snack = document.querySelector('.snackbar');
+    snack.showText(error.message);
+  }
+
+  _handleMainStatus (snap) {
+    this.main = snap.val();
   }
 
   _handleTodos (snap) {
