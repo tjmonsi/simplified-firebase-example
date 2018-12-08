@@ -1,0 +1,3 @@
+- Add firebase config
+- Install Firebase tools
+- Do Firebase init
