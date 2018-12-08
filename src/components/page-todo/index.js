@@ -1,11 +1,26 @@
-import { PropertiesLite } from '@tjmonsi/element-lite/mixins/properties-lite';
+import { ObserversLite } from '@tjmonsi/element-lite/mixins/observers-lite';
 import { TemplateLite } from '@tjmonsi/element-lite/mixins/template-lite';
 import { render, html } from 'lit-html'
 import { firebase } from '../../firebase';
 import { changeLocation } from '../../change-location';
 
-class PageTodo extends TemplateLite(PropertiesLite(HTMLElement)) {
+class PageTodo extends TemplateLite(ObserversLite(HTMLElement)) {
   static get renderer () { return render; }
+
+  static get properties () {
+    return {
+      todos: {
+        type: Array,
+        value: []
+      },
+      user: {
+        type: Object,
+        value: {},
+        observer: '_getTodos'
+      }
+    }
+  }
+
   template () {
     return html`
       <style>
@@ -14,6 +29,16 @@ class PageTodo extends TemplateLite(PropertiesLite(HTMLElement)) {
           padding: 24px;
           margin: 24px auto;
           text-align: center;
+        }
+
+        .todo {
+          text-align: left;
+          margin: 6px 12px;
+        }
+
+        ul {
+          margin: 0;
+          padding: 0;
         }
 
         input {
@@ -47,17 +72,70 @@ class PageTodo extends TemplateLite(PropertiesLite(HTMLElement)) {
 
         <button @click="${this.logout.bind(this)}">Logout</a>
       </div>
+
+      <div class="card">
+        <h2>
+          Todos...
+        </h2>
+
+        <ul>
+        ${this.todos && this.todos.length
+          ? this.todos.map(item => html`
+            <li class="todo">
+              ${item.todo}
+            </li>
+          `)
+          : html`
+            No todos yet...
+          `}
+        </ul>
+      </div>
     `;
+  }
+
+  constructor () {
+    super();
+    this._boundHandleTodos = this._handleTodos.bind(this);
+  }
+
+  connectedCallback () {
+    if (super.connectedCallback) super.connectedCallback();
+    firebase.auth().onAuthStateChanged(user => {
+      this.user = user;
+    });
+  }
+
+  disconnectedCallback () {
+    if (super.disconnectedCallback) super.disconnectedCallback();
+    if (this._ref) {
+      this._ref.off('value', this._boundHandleTodos);
+    }
+  }
+
+  _getTodos () {
+    this._ref = firebase.database().ref(`todo/data/${this.user.uid}`);
+    this._ref.on('value', this._boundHandleTodos);
+  }
+
+  _handleTodos (snap) {
+    const todos = [];
+    snap.forEach(item => {
+      const todo = {
+        ...item.val(),
+        $key: item.key
+      };
+      todos.push(todo);
+    });
+    this.todos = todos;
   }
 
   async todo (e) {
     e.preventDefault();
-    const { shadowRoot } = this;
+    const { shadowRoot, user } = this;
     const snack = document.querySelector('.snackbar');
     const todo = shadowRoot.querySelector('[name=todo]').value;
 
     try {
-      const user = firebase.auth().currentUser;
       if (!user) {
         snack.showText('Not allowed');
         changeLocation('/');
@@ -82,6 +160,7 @@ class PageTodo extends TemplateLite(PropertiesLite(HTMLElement)) {
   }
 
   async logout () {
+    snack.showText('Signing Out');
     const snack = document.querySelector('.snackbar');
     await firebase.auth().signOut();
     snack.showText('Signed out');

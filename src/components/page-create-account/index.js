@@ -58,6 +58,7 @@ class PageCreateAccount extends TemplateLite(PropertiesLite(HTMLElement)) {
     const snack = document.querySelector('.snackbar');
     const email = shadowRoot.querySelector('[name=email]').value;
     const password = shadowRoot.querySelector('[name=password]').value;
+    snack.showText('Creating account');
     try {
       const { user } = await firebase.auth().createUserWithEmailAndPassword(email, password);
       if (user) {

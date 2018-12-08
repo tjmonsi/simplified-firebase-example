@@ -58,6 +58,7 @@ class PageHome extends TemplateLite(PropertiesLite(HTMLElement)) {
     const snack = document.querySelector('.snackbar');
     const email = shadowRoot.querySelector('[name=email]').value;
     const password = shadowRoot.querySelector('[name=password]').value;
+    snack.showText('Signing In');
     try {
       const { user } = await firebase.auth().signInWithEmailAndPassword(email, password);
       if (user) {
