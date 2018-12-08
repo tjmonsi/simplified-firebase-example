@@ -2,6 +2,7 @@ import { PropertiesLite } from '@tjmonsi/element-lite/mixins/properties-lite';
 import { TemplateLite } from '@tjmonsi/element-lite/mixins/template-lite';
 import { render, html } from 'lit-html'
 import { firebase } from '../../firebase';
+import { changeLocation } from '../../change-location';
 
 class PageHome extends TemplateLite(PropertiesLite(HTMLElement)) {
   static get renderer () { return render; }
@@ -61,7 +62,7 @@ class PageHome extends TemplateLite(PropertiesLite(HTMLElement)) {
       const { user } = await firebase.auth().signInWithEmailAndPassword(email, password);
       if (user) {
         snack.showText('Signed In');
-        window.localStorage.setItem('user', user);
+        changeLocation('/todo');
       }
     } catch (error) {
       console.log(error);

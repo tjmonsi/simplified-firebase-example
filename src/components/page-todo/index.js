@@ -4,7 +4,7 @@ import { render, html } from 'lit-html'
 import { firebase } from '../../firebase';
 import { changeLocation } from '../../change-location';
 
-class PageCreateAccount extends TemplateLite(PropertiesLite(HTMLElement)) {
+class PageTodo extends TemplateLite(PropertiesLite(HTMLElement)) {
   static get renderer () { return render; }
   template () {
     return html`
@@ -38,38 +38,56 @@ class PageCreateAccount extends TemplateLite(PropertiesLite(HTMLElement)) {
       </style>
       <div class="card">
         <h1>
-          Signup
+          Todo App
         </h1>
-        <form @submit="${this.signup.bind(this)}">
-          <input placeholder="Email" name="email" type="email" required>
-          <input placeholder="Password" name="password" type="password" required>
-
-          <button>Signup</button>
+        <form @submit="${this.todo.bind(this)}">
+          <input placeholder="Please put your todo" name="todo" required>
+          <button>Add Todo</button>
         </form>
 
-        <a href="/">Login</a>
+        <button @click="${this.logout.bind(this)}">Logout</a>
       </div>
     `;
   }
 
-  async signup (e) {
+  async todo (e) {
     e.preventDefault();
     const { shadowRoot } = this;
     const snack = document.querySelector('.snackbar');
-    const email = shadowRoot.querySelector('[name=email]').value;
-    const password = shadowRoot.querySelector('[name=password]').value;
+    const todo = shadowRoot.querySelector('[name=todo]').value;
+
     try {
-      const { user } = await firebase.auth().createUserWithEmailAndPassword(email, password);
-      if (user) {
-        snack.showText('Created account for ' + email);
-        changeLocation('/todo');
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        snack.showText('Not allowed');
+        changeLocation('/');
+        return;
       }
+
+      const updates = {};
+      const { key } = firebase.database().ref(`todo/data/${user.uid}`).push();
+      updates[`todo/data/${user.uid}/${key}`] = {
+        todo,
+        done: false
+      }
+
+      await firebase.database().ref().update(updates);
+      shadowRoot.querySelector('[name=todo]').value = ''
+
+      snack.showText('Todo Added Successfully');
     } catch (error) {
       console.log(error);
       snack.showText(error.message);
     }
+  }
 
+  async logout () {
+    const snack = document.querySelector('.snackbar');
+    await firebase.auth().signOut();
+    snack.showText('Signed out');
+    changeLocation('/');
   }
 }
 
-customElements.define('page-create-account', PageCreateAccount);
+
+customElements.define('page-todo', PageTodo);
