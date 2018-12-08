@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "rollup": "./node_modules/.bin/rollup -c rollup.config.js",
     "copy": "node start",
-    "start": "npm run copy && npm run rollup"
+    "start": "node dev.js && npm run copy && npm run rollup",
+    "workbox": "./node_modules/.bin/workbox generateSW",
+    "prod": "npm start && npm run workbox",
+    "serve": "./node_modules/.bin/http-server public"
   },
   "repository": {
     "type": "git",
@@ -20,13 +23,33 @@
   },
   "homepage": "https://github.com/tjmonsi/simplified-firebase-example#readme",
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.9.0",
+    "eslint-config-semistandard": "^13.0.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-html": "^5.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
     "fs-extra": "^7.0.1",
-    "rollup": "^0.67.4"
+    "http-server": "^0.11.1",
+    "rollup": "^0.67.4",
+    "semistandard": "^13.0.1",
+    "workbox-cli": "^3.6.3"
   },
   "dependencies": {
     "@tjmonsi/element-lite": "^0.1.11",
     "@webcomponents/webcomponentsjs": "^2.2.1",
     "firebase": "^5.7.0",
     "lit-html": "^0.14.0"
+  },
+  "semistandard": {
+    "parser": "babel-eslint",
+    "globals": [
+      "beforeAll",
+      "afterAll",
+      "jest"
+    ]
   }
 }
