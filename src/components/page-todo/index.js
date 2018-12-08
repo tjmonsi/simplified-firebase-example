@@ -50,6 +50,12 @@ class PageTodo extends TemplateLite(ObserversLite(HTMLElement)) {
           box-sizing: border-box;
         }
 
+        input[type=checkbox] {
+          display: inline-block;
+          width: auto;
+          margin-right: 12px;
+        }
+
         form {
           padding: 24px;
         }
@@ -82,6 +88,7 @@ class PageTodo extends TemplateLite(ObserversLite(HTMLElement)) {
         ${this.todos && this.todos.length
           ? this.todos.map(item => html`
             <li class="todo">
+              <input type="checkbox" .checked="${item.done}" value="${item.$key}" @click="${this.toggleTodo.bind(this)}">
               ${item.todo}
             </li>
           `)
@@ -127,6 +134,16 @@ class PageTodo extends TemplateLite(ObserversLite(HTMLElement)) {
       todos.push(todo);
     });
     this.todos = todos;
+  }
+
+  async toggleTodo (e) {
+    const { target } = e;
+    const { value, checked } = target;
+    const snack = document.querySelector('.snackbar');
+    if (this.user) {
+      await firebase.database().ref(`todo/data/${this.user.uid}/${value}/done`).set(checked);
+      snack.showText(!checked ? 'Todo Undone' : 'Todo Done');
+    }
   }
 
   async todo (e) {
