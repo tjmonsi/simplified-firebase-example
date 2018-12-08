@@ -80,7 +80,7 @@ class PageTodo extends TemplateLite(ObserversLite(HTMLElement)) {
           <button>Add Todo</button>
         </form>
 
-        <button @click="${this.logout.bind(this)}">Logout</a>
+        <button type="button" @click="${this.logout.bind(this)}">Logout</a>
       </div>
 
       <div class="card">
@@ -194,8 +194,8 @@ class PageTodo extends TemplateLite(ObserversLite(HTMLElement)) {
   }
 
   async logout () {
-    snack.showText('Signing Out');
     const snack = document.querySelector('.snackbar');
+    snack.showText('Signing Out');
     await firebase.auth().signOut();
     snack.showText('Signed out');
     changeLocation('/');

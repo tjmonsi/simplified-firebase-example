@@ -92,7 +92,7 @@
                       console.log('The installing service worker became redundant.');
                   }
                   if (text) {
-                    var snacker = document.querySelector('.snackbar-lite');
+                    var snacker = document.querySelector('.snackbar');
                     if (snacker && snacker.showText) {
                       snacker.showText(text);
                     } else {
@@ -119,7 +119,7 @@
                   // be automatically removed.
 
                   if ('controller' in navigator.serviceWorker) {
-                    var snacker = document.querySelector('.snackbar-lite');
+                    var snacker = document.querySelector('.snackbar');
                     text = 'Reloading Web App to accommodate updates...'
                     if (snacker && snacker.showText) {
                       snacker.showText(text);

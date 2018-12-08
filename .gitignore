@@ -63,3 +63,4 @@ typings/
 src/firebase.config.js
 public/lib
 public/index.js
+public/workbox-**

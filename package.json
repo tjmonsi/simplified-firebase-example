@@ -9,7 +9,7 @@
     "copy": "node start",
     "start": "node dev.js && npm run copy && npm run build",
     "workbox": "./node_modules/.bin/workbox generateSW",
-    "prod": "npm start && npm run workbox",
+    "prod": "node dev.js && npm run copy && ./node_modules/.bin/webpack --mode=production -o public/index.js -entry src/index.js && npm run workbox",
     "serve": "./node_modules/.bin/http-server public"
   },
   "repository": {
