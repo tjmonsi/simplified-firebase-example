@@ -2,4 +2,7 @@
 - Install Firebase tools
 - Do Firebase init
 - add my core-lite for SPA
+- add home page
 - add login page
+- add create account page
+- add todo page
