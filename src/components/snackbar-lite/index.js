@@ -1,5 +1,4 @@
 import { TemplateLite } from '@tjmonsi/element-lite/mixins/template-lite.js';
-import { template } from './template.js';
 const { HTMLElement, customElements } = window;
 
 class Component extends TemplateLite(HTMLElement) {
@@ -57,7 +56,9 @@ class Component extends TemplateLite(HTMLElement) {
         to: {bottom: 0; opacity: 0;}
       }
 
-    </style>${template()}`;
+    </style><div class="snackbar">
+    <slot></slot>
+  </div>`;
   }
 
   show () {
